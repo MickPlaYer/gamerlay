@@ -1,15 +1,15 @@
-mod counter;
+mod overlay;
 
-use counter::Counter;
 use iced::{
     Color,
     theme::Style,
     window::{Level, Settings, settings::PlatformSpecific},
 };
+use overlay::Overlay;
 
 fn main() -> iced::Result {
-    iced::application(Counter::new, Counter::update, Counter::view)
-        .subscription(Counter::subscription)
+    iced::application(Overlay::new, Overlay::update, Overlay::view)
+        .subscription(Overlay::subscription)
         .title("_Gamerlay")
         .decorations(false)
         .window(Settings {
