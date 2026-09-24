@@ -1,3 +1,6 @@
+#![windows_subsystem = "windows"]
+
+mod icon;
 mod overlay;
 
 use iced::{
@@ -20,6 +23,7 @@ fn main() -> iced::Result {
                 skip_taskbar: true,
                 ..Default::default()
             },
+            icon: Some(icon::load()),
             ..Default::default()
         })
         .style(|_state, _theme| Style {
