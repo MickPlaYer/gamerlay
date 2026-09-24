@@ -10,13 +10,13 @@ use std::collections::HashMap;
 
 pub enum KeyAction {
     Exit,
-    Add,
+    Cycle,
     Toggle,
 }
 
 pub trait HotKeyMessage {
     fn message(id: u32) -> Self;
-    fn none() -> Self;
+    fn sleep() -> Self;
 }
 
 macro_rules! hotkey {
@@ -25,8 +25,9 @@ macro_rules! hotkey {
             let manager = GlobalHotKeyManager::new().unwrap();
             let mut hotkeys = HashMap::new();
             $(
-                manager.register($x).unwrap();
-                hotkeys.insert($x.id, $y);
+                let key = HotKey::new(Some(Modifiers::SHIFT), $x);
+                manager.register(key).unwrap();
+                hotkeys.insert(key.id, $y);
             )*
             (manager, hotkeys)
         }
@@ -35,18 +36,9 @@ macro_rules! hotkey {
 
 pub fn build() -> (GlobalHotKeyManager, HashMap<u32, KeyAction>) {
     hotkey![
-        (
-            HotKey::new(Some(Modifiers::SHIFT), Code::F9),
-            KeyAction::Exit
-        ),
-        (
-            HotKey::new(Some(Modifiers::SHIFT), Code::F10),
-            KeyAction::Toggle
-        ),
-        (
-            HotKey::new(Some(Modifiers::SHIFT), Code::F11),
-            KeyAction::Add
-        )
+        (Code::F9, KeyAction::Exit),
+        (Code::F10, KeyAction::Toggle),
+        (Code::F11, KeyAction::Cycle)
     ]
 }
 
@@ -60,7 +52,7 @@ pub fn subscription<T: HotKeyMessage + Send + 'static>() -> Subscription<T> {
                 {
                     T::message(event.id)
                 } else {
-                    T::none()
+                    T::sleep()
                 }
             }
         },

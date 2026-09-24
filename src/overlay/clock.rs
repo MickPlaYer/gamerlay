@@ -1,18 +1,23 @@
 use iced::{
-    Element, Subscription,
+    Background, Border, Color, Element, Font, Subscription,
+    border::Radius,
+    font::{Family, Weight},
     time::{every, milliseconds},
-    widget,
+    widget::{container, text},
 };
-
-pub struct Clock {
-    time: Option<String>,
-}
 
 pub enum Message {
     Tick,
 }
 
+pub struct Clock {
+    time: Option<String>,
+}
+
 impl Clock {
+    const TEXT_COLOR: Color = Color::from_rgba8(142, 151, 159, 0.7);
+    const BACK_COLOR: Color = Color::from_rgba8(33, 37, 41, 0.7);
+
     pub fn new() -> Self {
         Self { time: Option::None }
     }
@@ -25,7 +30,24 @@ impl Clock {
 
     pub fn view(&self) -> Option<Element<'_, Message>> {
         let time = self.time.clone()?;
-        Some(widget::text!("{}", time).into())
+        Some(
+            container(text!("{time}").size(32).font(Font {
+                family: Family::Name("Consolas"),
+                weight: Weight::Semibold,
+                ..Default::default()
+            }))
+            .style(|_| container::Style {
+                text_color: Some(Self::TEXT_COLOR),
+                background: Some(Background::Color(Self::BACK_COLOR)),
+                border: Border {
+                    radius: Radius::new(7),
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+            .padding([5, 10])
+            .into(),
+        )
     }
 
     pub fn subscription(&self) -> Subscription<Message> {
