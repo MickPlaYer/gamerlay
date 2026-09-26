@@ -32,8 +32,8 @@ impl Clock {
         let time = self.time.clone()?;
         Some(
             container(text!("{time}").size(32).font(Font {
-                family: Family::Name("Consolas"),
-                weight: Weight::Semibold,
+                family: Family::Name("Cascadia Mono"),
+                weight: Weight::Bold,
                 ..Default::default()
             }))
             .style(|_| container::Style {

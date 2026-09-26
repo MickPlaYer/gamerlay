@@ -30,5 +30,9 @@ fn main() -> iced::Result {
             background_color: Color::TRANSPARENT,
             text_color: Color::WHITE,
         })
+        .font(include_bytes!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/resources/CascadiaMono-Bold.ttf"
+        )))
         .run()
 }
